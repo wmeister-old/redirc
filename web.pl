@@ -8,7 +8,7 @@ print qq{Content-type: text/html\n\n<html><body><table width="100%" border="1"><
 
 foreach my $k (sort $r->keys('*')) {	
 		my $v = $r->get($k);
-		$v = '<a href="'.($v =~ /^(https?:\/\/)/)[0].uri_escape(($v =~ /^https?:\/\/(.*)/)[0]).qq[" target="_blank">$v</a>] if $v =~ /^https?:\/\//;
+		$v = '<a href="'.($v =~ m#^([^:]+://[^/]+/?)#)[0].uri_escape(($v =~ m#^[^:]+://[^/]+/(.*)#)[0]).qq[" target="_blank">$v</a>] if $v =~ m#^[^:]+://#;
 		print "<tr><td>$k</td><td>$v</td></tr>"; 
 }
 print "</table></body></html>";
