@@ -100,7 +100,8 @@ sub handle_privmsg {
 										                       del => sub { redis->del($_[0]); undef; }}); # TODO see below
 				} 
 				# non-privelaged commands
-				dispatch($chan, $cmd, $args, { get => sub { redis->get($_[0]); }}); # TODO pack those first three variables up to pass them to the dispatch function
+				dispatch($chan, $cmd, $args, { get => sub { redis->get($_[0]); },
+								                       web => sub { 'http://tankjetstudios.com/redis.pl'; }}); # TODO pack those first three variables up to pass them to the dispatch function
 		}
 }
 
