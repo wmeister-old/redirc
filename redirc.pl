@@ -7,6 +7,7 @@ use Redis;
 our $sock;
 our $redis = Redis->new;
 
+sub redis() {	$redis->ping or $redis = Redis->new; $redis; }
 sub rmpadding($) { $_[0] =~ s/(?:^[\r\n\s\f]+|[\r\n\s\f]+$)//g; $_[0]; }
 sub pysplit { split(/\s+/, rmpadding $_[0]); }
 sub parse($) {
@@ -95,11 +96,11 @@ sub handle_privmsg {
 
 				if(adminp($user)) {
 						# privelaged commands
-						dispatch($chan, $cmd, $args, { set => sub { my ($k, @r) = @_; $redis->set($k => join(' ', @r)); undef; },
-										                       del => sub { $redis->del($_[0]); undef; }}); # TODO see below
+						dispatch($chan, $cmd, $args, { set => sub { my ($k, @r) = @_; redis->set($k => join(' ', @r)); undef; },
+										                       del => sub { redis->del($_[0]); undef; }}); # TODO see below
 				} 
 				# non-privelaged commands
-				dispatch($chan, $cmd, $args, { get => sub { $redis->get($_[0]); }}); # TODO pack those first three variables up to pass them to the dispatch function
+				dispatch($chan, $cmd, $args, { get => sub { redis->get($_[0]); }}); # TODO pack those first three variables up to pass them to the dispatch function
 		}
 }
 
